@@ -2,6 +2,7 @@ const { Client, Intents } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
+const fs = require('fs');
 
 const application_id = `${process.env['CLIENT_ID']}`;
 const guild_id = `${process.env['GUILD_ID']}`;
@@ -79,22 +80,31 @@ client.on('interactionCreate', async interaction => {
   if (commandName === 'addflop') {
     const user = options.getUser('utilisateur');
     if (!user) return interaction.reply('Merci de mentionner un utilisateur.');
-
+  
     // Ajouter un flop à l'utilisateur ici
     const userFlopCount = flopCounts.get(user.id) || 0;
     flopCounts.set(user.id, userFlopCount + 1);
-
+  
+    fs.writeFile('flopCounts.json', JSON.stringify([...flopCounts]), (err) => {
+      if (err) throw err;
+      console.log('Flop counts saved to file.');
+    });
+  
     interaction.reply(`${user} a maintenant un flop de plus ! Faites /leaderflop pour afficher le classement !`);
   }
 
   if (commandName === 'delflop') {
     const user = options.getUser('utilisateur');
     if (!user) return interaction.reply('Merci de mentionner un utilisateur.');
-
+  
     // Supprimer un flop à l'utilisateur ici
     const userFlopCount = flopCounts.get(user.id) || 0;
     if (userFlopCount > 0) {
       flopCounts.set(user.id, userFlopCount - 1);
+      fs.writeFile('flopCounts.json', JSON.stringify([...flopCounts]), (err) => {
+        if (err) throw err;
+        console.log('Flop counts saved to file.');
+      });
       interaction.reply(`${user} a maintenant un flop de moins ! Faites /leaderflop pour afficher le classement !`);
     } else {
       interaction.reply(`${user} n'a pas de flops à retirer.`);
