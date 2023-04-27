@@ -3,6 +3,7 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
 const fs = require('fs');
+const userFlopCount = flopCounts.get(user.id) || 0;
 
 const application_id = `${process.env['CLIENT_ID']}`;
 const guild_id = `${process.env['GUILD_ID']}`;
@@ -115,7 +116,7 @@ client.on('interactionCreate', async interaction => {
 
   if (commandName === 'leaderflop') {
     // Afficher le classement des utilisateurs avec le plus de flops ici
-    const sortedFlopCounts = Array.from(flopCounts.entries()).sort((a, b) => b[1] - a[1]);
+    const sortedFlopCounts = Object.entries(flopCounts).sort((a, b) => b[1] - a[1]);
 
     if (sortedFlopCounts.length === 0) {
       interaction.reply('Personne n\'a de flop pour le moment.');
@@ -129,7 +130,7 @@ client.on('interactionCreate', async interaction => {
   if (commandName === 'flops') {
     const user = options.getUser('utilisateur');
     if (!user) return interaction.reply('Merci de mentionner un utilisateur.');
-    const userFlopCount = flopCounts.get(user.id) || 0;
+    const userFlopCount = flopCounts[user.id] || 0;
     interaction.reply(`${user} a ${userFlopCount} flops.`);
   }
 });
