@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "installation": "npm cache clean --force",
     "dev": "npm install",
     "build": "node index.js"
   },
