@@ -3,6 +3,7 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
 const fs = require('fs');
+const flopCounts = require('./flopCounts.json');
 const userFlopCount = flopCounts.get(user.id) || 0;
 
 const application_id = `${process.env['CLIENT_ID']}`;
