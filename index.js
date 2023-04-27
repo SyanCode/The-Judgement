@@ -1,10 +1,9 @@
+const flopCounts = require('./flopCounts.json');
 const { Client, Intents } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
 const fs = require('fs');
-const flopCounts = require('./flopCounts.json');
-const userFlopCount = flopCounts.get(user.id) || 0;
 
 const application_id = `${process.env['CLIENT_ID']}`;
 const guild_id = `${process.env['GUILD_ID']}`;
@@ -56,8 +55,6 @@ const commands = [
 const client = new Client({ intents: 3243773 });
 const rest = new REST({ version: '9' }).setToken(token);
 
-const flopCounts = new Map();
-
 client.on('ready', async () => {
   console.log(`✅ ${client.user.tag} est connecté!`);
   client.user.setActivity('observer son déploiement!');
@@ -68,7 +65,7 @@ client.on('ready', async () => {
       { body: commands },
     );
 
-    console.log('Successfully registered slash commands.');
+    console.log('✅ Les slash commands ont bien été initialisées !');
   } catch (error) {
     console.error(error);
   }
