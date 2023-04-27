@@ -51,7 +51,7 @@ const commands = [
 ];
 
 const client = new Client({ intents: 3243773 });
-const rest = new REST({ version: '9' }).setToken(process.env.token);
+const rest = new REST({ version: '9' }).setToken(token);
 
 const flopCounts = new Map();
 
@@ -123,6 +123,6 @@ client.on('interactionCreate', async interaction => {
 });
 
 
-client.login(process.env.token);
+client.login(token);
 
 module.exports = { flopCounts };
