@@ -84,7 +84,7 @@ client.on('interactionCreate', async interaction => {
     const userFlopCount = flopCounts.get(user.id) || 0;
     flopCounts.set(user.id, userFlopCount + 1);
 
-    interaction.reply(`${user} a maintenant un flop de plus ! Il en a maintenant ${userFlopCount} !`);
+    interaction.reply(`${user} a maintenant un flop de plus ! Faites /leaderflop pour afficher le classement !`);
   }
 
   if (commandName === 'delflop') {
@@ -95,7 +95,7 @@ client.on('interactionCreate', async interaction => {
     const userFlopCount = flopCounts.get(user.id) || 0;
     if (userFlopCount > 0) {
       flopCounts.set(user.id, userFlopCount - 1);
-      interaction.reply(`${user} a maintenant un flop de moins ! Il en a maintenant ${userFlopCount} !`);
+      interaction.reply(`${user} a maintenant un flop de moins ! Faites /leaderflop pour afficher le classement !`);
     } else {
       interaction.reply(`${user} n'a pas de flops à retirer.`);
     }
