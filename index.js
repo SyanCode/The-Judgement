@@ -3,9 +3,9 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
 
-const CLIENT_ID = `${process.env['CLIENT_ID']}`;
-const GUILD_ID = `${process.env['GUILD_ID']}`;
-const TOKEN = `${process.env['TOKEN']}`;
+const application_id = `${process.env['CLIENT_ID']}`;
+const guild_id = `${process.env['GUILD_ID']}`;
+const token = `${process.env['TOKEN']}`;
 
 const commands = [
   {
@@ -51,7 +51,7 @@ const commands = [
 ];
 
 const client = new Client({ intents: 3243773 });
-const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+const rest = new REST({ version: '9' }).setToken(process.env.token);
 
 const flopCounts = new Map();
 
@@ -61,7 +61,7 @@ client.on('ready', async () => {
 
   try {
     await rest.put(
-      Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+      Routes.applicationGuildCommands(application_id, guild_id),
       { body: commands },
     );
 
@@ -123,6 +123,6 @@ client.on('interactionCreate', async interaction => {
 });
 
 
-client.login(process.env.TOKEN);
+client.login(token);
 
 module.exports = { flopCounts };
