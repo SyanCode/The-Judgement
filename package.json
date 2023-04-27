@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && npm run build",
+    "dev": "npm install",
+    "build": "npm run build",
     "start": "node index.js"
   },
   "author": "",
