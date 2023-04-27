@@ -122,7 +122,7 @@ client.on('interactionCreate', async interaction => {
       interaction.reply('Personne n\'a de flop pour le moment.');
     } else {
       const topFlopUsers = sortedFlopCounts.slice(0, 10);
-      const response = topFlopUsers.map((user, index) => `${index + 1}. ${member[0]} - ${user[1]} flops`).join('\n');
+      const response = topFlopUsers.map((user, index) => `${index + 1}. ${member.user.username[0]} - ${user[1]} flops`).join('\n');
       interaction.reply(`Voici le classement des utilisateurs avec le plus de flops :\n${response}`);
     }
   }
