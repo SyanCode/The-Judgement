@@ -3,6 +3,10 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
 
+const clientId = process.env['client_id']
+const guildId = process.env['guild_id']
+const token = process.env['token']
+
 const commands = [
   {
     name: 'addflop',
@@ -119,6 +123,6 @@ client.on('interactionCreate', async interaction => {
 });
 
 
-client.login(process.env.TOKEN);
+client.login(process.env.token);
 
 module.exports = { flopCounts };
