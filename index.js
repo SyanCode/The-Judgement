@@ -1,4 +1,4 @@
-const flopCounts = require('./flopCounts.json');
+const flopCounts = new Map(require('./flopCounts.json'));
 const { Client, Intents } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -82,7 +82,6 @@ client.on('interactionCreate', async interaction => {
   
     // Ajouter un flop à l'utilisateur ici
     const userFlopCount = flopCounts.get(user.id) || 0;
-    flopCounts.set(user.id, userFlopCount + 1);
   
     fs.writeFile('flopCounts.json', JSON.stringify([...flopCounts]), (err) => {
       if (err) throw err;
@@ -100,6 +99,7 @@ client.on('interactionCreate', async interaction => {
   
     // Supprimer un flop à l'utilisateur ici
     const userFlopCount = flopCounts.get(user.id) || 0;
+
     if (userFlopCount > 0) {
       flopCounts.set(user.id, userFlopCount - 1);
       fs.writeFile('flopCounts.json', JSON.stringify([...flopCounts]), (err) => {
@@ -120,7 +120,7 @@ client.on('interactionCreate', async interaction => {
       interaction.reply('Personne n\'a de flop pour le moment.');
     } else {
       const topFlopUsers = sortedFlopCounts.slice(0, 10);
-      const response = topFlopUsers.map((user, index) => `${index + 1}. ${user[0]} - ${user[1]} flops`).join('\n');
+      const response = topFlopUsers.map((user, index) => `${index + 1}. ${user[1]} - ${user[1]} flops`).join('\n');
       interaction.reply(`Voici le classement des utilisateurs avec le plus de flops :\n${response}`);
     }
   }
