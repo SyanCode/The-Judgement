@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "installation": "npm cache clean --force",
-    "dev": "npm install",
-    "build": "npm start"
+    "build": "npm install",
+    "start": "npm start"
   },
   "author": "",
   "license": "ISC",
