@@ -57,7 +57,7 @@ const flopCounts = new Map();
 
 client.on('ready', async () => {
   console.log(`✅ ${client.user.tag} est connecté!`);
-  client.user.setActivity('vous regarder flopper');
+  client.user.setActivity('tester son déploiement!');
 
   try {
     await rest.put(
