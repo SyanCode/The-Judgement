@@ -115,11 +115,14 @@ client.on('interactionCreate', async interaction => {
     // Afficher le classement des utilisateurs avec le plus de flops ici
     const sortedFlopCounts = Array.from(flopCounts.entries()).sort((a, b) => b[1] - a[1]);
 
+    const guild = client.guilds.cache.get(guild_id);
+    const member = guild.members.cache.get(user)
+
     if (sortedFlopCounts.length === 0) {
       interaction.reply('Personne n\'a de flop pour le moment.');
     } else {
       const topFlopUsers = sortedFlopCounts.slice(0, 10);
-      const response = topFlopUsers.map((user, index) => `${index + 1}. ${user[0]} - ${user[1]} flops`).join('\n');
+      const response = topFlopUsers.map((user, index) => `${index + 1}. ${member[0]} - ${user[1]} flops`).join('\n');
       interaction.reply(`Voici le classement des utilisateurs avec le plus de flops :\n${response}`);
     }
   }
