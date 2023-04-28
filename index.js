@@ -1,4 +1,4 @@
-const flopCounts = new Map(require('./flopCounts.json'));
+const flopCounts = new Map(Object.entries(require('./flopCounts.json')));
 const { Client, Intents } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -128,7 +128,7 @@ client.on('interactionCreate', async interaction => {
   if (commandName === 'flops') {
     const user = options.getUser('utilisateur');
     if (!user) return interaction.reply('Merci de mentionner un utilisateur.');
-    const userFlopCount = flopCounts[user.id] || 0;
+    const userFlopCount = flopCounts.get(user.id) || 0;
     interaction.reply(`${user} a ${userFlopCount} flops.`);
   }
 });
