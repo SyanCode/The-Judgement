@@ -48,6 +48,10 @@ client.on('ready', () => {
     .setName('leaderflop')
     .setDescription('Affiche le classement des utilisateurs avec le plus de flops.');
 
+  const helpCommand = new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('Affiche la liste des commandes disponibles');
+
   commands.push(addFlopCommand.toJSON());
   commands.push(delFlopCommand.toJSON());
   commands.push(flopsCommand.toJSON());
@@ -115,6 +119,16 @@ Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], 
   }
   
   await interaction.reply(`Voici le classement des flops :\n${leaderBoard}`);
+} else if (commandName === 'help') {
+  const embed = new MessageEmbed()
+      .setTitle('List of Commands')
+      .setDescription('Here are the available commands:')
+      .setColor('#00ff00')
+      .addField('/addflop', 'Adds a flop to your flops count')
+      .addField('/delflop', 'Removes a flop from your flops count')
+      .addField('/flops', 'Displays the number of flops you have')
+      .addField('/leaderflop', 'Displays the leaderboard of the top 10 users with the most flops');
+    interaction.reply({ embeds: [embed] });
 }
 });
 
