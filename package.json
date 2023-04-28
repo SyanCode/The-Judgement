@@ -2,7 +2,7 @@
   "name": "flopbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "installation": "npm cache clean --force",
     "build": "npm install",
