@@ -4,6 +4,7 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv'); require('dotenv').config();
 const fs = require('fs');
+const { EmbedBuilder } = require('discord.js')
 
 const client = new Discord.Client({ intents: 3243773 });
 const commands = [];
@@ -56,6 +57,7 @@ client.on('ready', () => {
   commands.push(delFlopCommand.toJSON());
   commands.push(flopsCommand.toJSON());
   commands.push(leaderFlopCommand.toJSON());
+  commands.push(helpCommand.toJSON()); 
 
   const rest = new REST({ version: '9' }).setToken(token);
 
@@ -81,7 +83,7 @@ client.on('interactionCreate', async interaction => {
 
     fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-    await interaction.reply(`Un flop a été ajouté à ${user.tag}!`);
+    await interaction.reply(`Un flop a été ajouté à ${user.username}!`);
   } else if (commandName === 'delflop') {
     const user = options.getUser('utilisateur');
     const userId = user.id;
@@ -95,9 +97,9 @@ client.on('interactionCreate', async interaction => {
 
       fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-      await interaction.reply(`Un flop a été retiré à ${user.tag}!`);
+      await interaction.reply(`Un flop a été retiré à ${user.username}!`);
     } else {
-      await interaction.reply(`${user.tag} n'a aucun flop à retirer.`);
+      await interaction.reply(`${user.username} n'a aucun flop à retirer.`);
     }
   } else if (commandName === 'flops') {
     const user = options.getUser('utilisateur');
@@ -111,24 +113,21 @@ let leaderBoard = '';
 Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], index) => {
     const user = client.users.cache.get(userId);
   
-    leaderBoard += `${index + 1}. ${user.tag}: ${userFlops} flops\n`;
+    leaderBoard += `${index + 1}. ${user.username}: ${userFlops} flops\n`;
   });
   
   if (leaderBoard === '') {
-    leaderBoard = 'Il n\'y a aucun flop sur le serveur pour l\'instant.';
+    leaderBoard = 'Il n\'y a aucun flop enregistré pour l\'instant.';
   }
   
   await interaction.reply(`Voici le classement des flops :\n${leaderBoard}`);
 } else if (commandName === 'help') {
-  const embed = new MessageEmbed()
-      .setTitle('Liste des commandes')
-      .setDescription('Voici les commandes disponibles:')
-      .setColor('#00ff00')
-      .addField('/addflop', 'Ajouter un flop à un utilisateur précis')
-      .addField('/delflop', 'Retirer un flop à un utilisateur précis')
-      .addField('/flops', 'Afficher les flops d\'un utilisateur précis')
-      .addField('/leaderflop', 'Afficher le leaderflop du top 10 utilisateurs avec le plus de flops');
-    interaction.reply({ embeds: [embed] });
+  const embed = new EmbedBuilder()
+    .setTitle('Liste des commandes')
+    .setThumbnail('https://cdn.discordapp.com/avatars/1100567736981139486/aacd03f9b319c9815bdebf9d54a86b42?size=1024')
+    .setDescription('Voici les commandes disponibles: \n/addflop: Ajouter un flop à un utilisateur précis  /delflop: Retirer un flop à un utilisateur précis\n/flops: Afficher les flops d\'un utilisateur précis\n/leaderflop: Afficher le leaderflop du top 10 utilisateurs avec le plus de flops')
+    .setColor('#010039')
+  interaction.reply({ embeds: [embed] });
 }
 });
 
