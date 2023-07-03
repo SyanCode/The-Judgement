@@ -12,10 +12,10 @@ const application_id = `${process.env['CLIENT_ID']}`;
 const guild_id = `${process.env['GUILD_ID']}`;
 const token = `${process.env['TOKEN']}`;
 
-const flops = {};
+const flops = require('./flops.json');
 
 client.on('ready', () => {
-  console.log(`✅ ${client.user.tag} est connecté!`);
+  console.log(`✅ ${client.user.username} est connecté!`);
   client.user.setActivity('faire flopper le serveur en appelant Grim!');
 
   const addFlopCommand = new SlashCommandBuilder()
@@ -81,7 +81,7 @@ client.on('interactionCreate', async interaction => {
 
     fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-    await interaction.reply(`Un flop a été ajouté à ${user.username}!`);
+    await interaction.reply(`Un flop a été ajouté à ${user.tag}!`);
   } else if (commandName === 'delflop') {
     const user = options.getUser('utilisateur');
     const userId = user.id;
@@ -95,9 +95,9 @@ client.on('interactionCreate', async interaction => {
 
       fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-      await interaction.reply(`Un flop a été retiré à ${user.username}!`);
+      await interaction.reply(`Un flop a été retiré à ${user.tag}!`);
     } else {
-      await interaction.reply(`${user.username} n'a aucun flop à retirer.`);
+      await interaction.reply(`${user.tag} n'a aucun flop à retirer.`);
     }
   } else if (commandName === 'flops') {
     const user = options.getUser('utilisateur');
@@ -105,13 +105,13 @@ client.on('interactionCreate', async interaction => {
 
     const userFlops = flops[userId] || 0;
 
-    await interaction.reply(`${user.username} a ${userFlops} flop(s)`);
+    await interaction.reply(`${user.tag} a ${userFlops} flop(s)`);
 } else if (commandName === 'leaderflop') {
 let leaderBoard = '';
 Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], index) => {
     const user = client.users.cache.get(userId);
   
-    leaderBoard += `${index + 1}. ${user.username}: ${userFlops} flops\n`;
+    leaderBoard += `${index + 1}. ${user.tag}: ${userFlops} flops\n`;
   });
   
   if (leaderBoard === '') {
@@ -121,13 +121,13 @@ Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], 
   await interaction.reply(`Voici le classement des flops :\n${leaderBoard}`);
 } else if (commandName === 'help') {
   const embed = new MessageEmbed()
-      .setTitle('List of Commands')
-      .setDescription('Here are the available commands:')
+      .setTitle('Liste des commandes')
+      .setDescription('Voici les commandes disponibles:')
       .setColor('#00ff00')
-      .addField('/addflop', 'Adds a flop to your flops count')
-      .addField('/delflop', 'Removes a flop from your flops count')
-      .addField('/flops', 'Displays the number of flops you have')
-      .addField('/leaderflop', 'Displays the leaderboard of the top 10 users with the most flops');
+      .addField('/addflop', 'Ajouter un flop à un utilisateur précis')
+      .addField('/delflop', 'Retirer un flop à un utilisateur précis')
+      .addField('/flops', 'Afficher les flops d\'un utilisateur précis')
+      .addField('/leaderflop', 'Afficher le leaderflop du top 10 utilisateurs avec le plus de flops');
     interaction.reply({ embeds: [embed] });
 }
 });
