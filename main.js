@@ -14,10 +14,11 @@ const guild_id = `${process.env['GUILD_ID']}`;
 const token = `${process.env['TOKEN']}`;
 
 const flops = require('./flops.json');
+const masterclasses = require('./masterclasses.json');
 
 client.on('ready', () => {
   console.log(`✅ ${client.user.username} est connecté!`);
-  client.user.setActivity('faire flopper le serveur en appelant Grim!');
+  client.user.setActivity('appliquer les sentences');
 
   const addFlopCommand = new SlashCommandBuilder()
     .setName('addflop')
@@ -53,11 +54,45 @@ client.on('ready', () => {
     .setName('help')
     .setDescription('Affiche la liste des commandes disponibles');
 
+  const addMasterclassCommand = new SlashCommandBuilder()
+    .setName('addmasterclass')
+    .setDescription('Ajoute une masterclass à un utilisateur.')
+    .addUserOption(option => 
+      option.setName('utilisateur')
+      .setDescription('L\'utilisateur à qui ajouter une masterclass')
+      .setRequired(true)
+    );
+
+  const delMasterclassCommand = new SlashCommandBuilder()
+    .setName('delmasterclass')
+    .setDescription('Retire une masterclass à un utilisateur.')
+    .addUserOption(option => 
+      option.setName('utilisateur')
+      .setDescription('L\'utilisateur à qui retirer une masterclass')
+      .setRequired(true)
+    );
+  
+  const masterclassesCommand = new SlashCommandBuilder()
+    .setName('masterclasses')
+    .setDescription('Affiche le nombre de masterclasses de l\'utilisateur.')
+    .addUserOption(option => 
+      option.setName('utilisateur')
+      .setDescription('L\'utilisateur dont afficher les masterclasses')
+    );
+
+  const masterBoardCommand = new SlashCommandBuilder()
+    .setName('masterboard')
+    .setDescription('Affiche le classement des utilisateurs avec le plus de masterclasses.');
+
   commands.push(addFlopCommand.toJSON());
   commands.push(delFlopCommand.toJSON());
   commands.push(flopsCommand.toJSON());
   commands.push(leaderFlopCommand.toJSON());
-  commands.push(helpCommand.toJSON()); 
+  commands.push(helpCommand.toJSON());
+  commands.push(addMasterclassCommand.toJSON());
+  commands.push(delMasterclassCommand.toJSON());
+  commands.push(masterclassesCommand.toJSON());
+  commands.push(masterBoardCommand.toJSON());
 
   const rest = new REST({ version: '9' }).setToken(token);
 
@@ -83,7 +118,7 @@ client.on('interactionCreate', async interaction => {
 
     fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-    await interaction.reply(`Un flop a été ajouté à ${user.username}!`);
+    await interaction.reply(`Un flop a été ajouté à ${user.username}! Faites /leaderflop pour afficher le classement!`);
   } else if (commandName === 'delflop') {
     const user = options.getUser('utilisateur');
     const userId = user.id;
@@ -97,7 +132,7 @@ client.on('interactionCreate', async interaction => {
 
       fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-      await interaction.reply(`Un flop a été retiré à ${user.username}!`);
+      await interaction.reply(`Un flop a été retiré à ${user.username}! Faites /leaderflop pour afficher le classement!`);
     } else {
       await interaction.reply(`${user.username} n'a aucun flop à retirer.`);
     }
@@ -128,7 +163,58 @@ Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], 
     .setDescription('Voici les commandes disponibles: \n/addflop: Ajouter un flop à un utilisateur précis  /delflop: Retirer un flop à un utilisateur précis\n/flops: Afficher les flops d\'un utilisateur précis\n/leaderflop: Afficher le leaderflop du top 10 utilisateurs avec le plus de flops')
     .setColor('#010039')
   interaction.reply({ embeds: [embed] });
-}
+} else if (commandName === 'addmasterclass') {
+  const user = options.getUser('utilisateur');
+  const userId = user.id;
+
+  if (!masterclasses[userId]) {
+    masterclasses[userId] = 1;
+  } else {
+    masterclasses[userId] += 1;
+  }
+
+  fs.writeFileSync('masterclasses.json', JSON.stringify(masterclasses, null, 2));
+
+  await interaction.reply(`Une masterclass a été ajoutée à ${user.username}! Faites /masterboard pour afficher le classement!`);
+} else if (commandName === 'delmasterclass') {
+  const user = options.getUser('utilisateur');
+  const userId = user.id;
+
+  if (masterclasses[userId]) {
+    masterclasses[userId] -= 1;
+
+    if (masterclasses[userId] === 0) {
+      delete masterclasses[userId];
+    }
+
+    fs.writeFileSync('masterclasses.json', JSON.stringify(masterclasses, null, 2));
+
+    await interaction.reply(`Une masterclass a été retirée à ${user.username}! Faites /masterboard pour afficher le classement!`);
+  } else {
+    await interaction.reply(`${user.username} n'a aucune masterclass à retirer.`);
+  }
+} else if (commandName === 'masterclasses') {
+  const user = options.getUser('utilisateur');
+  const userId = user.id;
+
+  const userMasterclasses = masterclasses[userId] || 0;
+
+  await interaction.reply(`${user.tag} a ${userFlops} masterclass(es)`);
+} else if (commandName === 'masterboard') {
+  let masterBoard = '';
+  Object.entries(masterclasses).sort((a, b) => b[1] - a[1]).forEach(([userId, userMasterclasses], index) => {
+      const user = client.users.cache.get(userId);
+    
+      masterBoard += `${index + 1}. ${user.username}: ${userMasterclasses} masterclasses\n`;
+    });
+    
+    if (masterBoard === '') {
+      masterBoard = 'Il n\'y a aucun flop enregistré pour l\'instant.';
+    }
+    
+    await interaction.reply(`Voici le classement des masterclasses :\n${masterBoard}`);
+  }
+
 });
 
 client.login(token);
