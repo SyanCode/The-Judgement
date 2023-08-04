@@ -118,7 +118,7 @@ client.on('interactionCreate', async interaction => {
 
     fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-    await interaction.reply(`Un flop a été ajouté à ${user.username}! Faites /leaderflop pour afficher le classement!`);
+    await interaction.reply(`Un flop a été ajouté à ${user.username}! Faites </leaderflop:1101528609405014220> pour afficher le classement!`);
   } else if (commandName === 'delflop') {
     const user = options.getUser('utilisateur');
     const userId = user.id;
@@ -132,7 +132,7 @@ client.on('interactionCreate', async interaction => {
 
       fs.writeFileSync('flops.json', JSON.stringify(flops, null, 2));
 
-      await interaction.reply(`Un flop a été retiré à ${user.username}! Faites /leaderflop pour afficher le classement!`);
+      await interaction.reply(`Un flop a été retiré à ${user.username}! Faites </leaderflop:1101528609405014220> pour afficher le classement!`);
     } else {
       await interaction.reply(`${user.username} n'a aucun flop à retirer.`);
     }
@@ -160,7 +160,7 @@ Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], 
   const embed = new EmbedBuilder()
     .setTitle('Liste des commandes')
     .setThumbnail('https://cdn.discordapp.com/avatars/1100567736981139486/aacd03f9b319c9815bdebf9d54a86b42?size=1024')
-    .setDescription('Voici les commandes disponibles: \n/addflop: Ajouter un flop à un utilisateur précis  /delflop: Retirer un flop à un utilisateur précis\n/flops: Afficher les flops d\'un utilisateur précis\n/leaderflop: Afficher le leaderflop du top 10 utilisateurs avec le plus de flops')
+    .setDescription('Voici les commandes disponibles: \n/addflop: Ajouter un flop à un utilisateur précis  /delflop: Retirer un flop à un utilisateur précis\n/flops: Afficher les flops d\'un utilisateur précis\n/leaderflop: Afficher le leaderflop du top 10 utilisateurs avec le plus de flops\n/addmasterclass: Ajouter une masterclass à un utilisateur précis \n /delmasterclass: Retirer une masterclass à un utilisateur précis\n/masterclasses: Afficher les masterclasses d\'un utilisateur précis\n/masterboard: Afficher le masterboard du top 10 utilisateurs avec le plus de masterclasses')
     .setColor('#010039')
   interaction.reply({ embeds: [embed] });
 } else if (commandName === 'addmasterclass') {
@@ -175,7 +175,7 @@ Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], 
 
   fs.writeFileSync('masterclasses.json', JSON.stringify(masterclasses, null, 2));
 
-  await interaction.reply(`Une masterclass a été ajoutée à ${user.username}! Faites /masterboard pour afficher le classement!`);
+  await interaction.reply(`Une masterclass a été ajoutée à ${user.username}! Faites </masterboard:1125898031401799735> pour afficher le classement!`);
 } else if (commandName === 'delmasterclass') {
   const user = options.getUser('utilisateur');
   const userId = user.id;
@@ -189,7 +189,7 @@ Object.entries(flops).sort((a, b) => b[1] - a[1]).forEach(([userId, userFlops], 
 
     fs.writeFileSync('masterclasses.json', JSON.stringify(masterclasses, null, 2));
 
-    await interaction.reply(`Une masterclass a été retirée à ${user.username}! Faites /masterboard pour afficher le classement!`);
+    await interaction.reply(`Une masterclass a été retirée à ${user.username}! Faites </masterboard:1125898031401799735> pour afficher le classement!`);
   } else {
     await interaction.reply(`${user.username} n'a aucune masterclass à retirer.`);
   }
