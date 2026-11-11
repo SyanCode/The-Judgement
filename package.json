@@ -6,7 +6,7 @@
   "scripts": {
     "installation": "npm cache clean --force",
     "build": "npm install",
-    "start": "npm start"
+    "start": "node main.js"
   },
   "author": "",
   "license": "ISC",
